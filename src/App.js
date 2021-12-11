@@ -35,7 +35,7 @@ const App = () => {
 
           <div className="">
             <div className="flex flex-col items-center pb-10">
-              <img className="shadow-lg rounded-full h-24 w-24 mb-3" src="https://i.pravatar.cc/150?img=41" />
+              <img className="h-24 w-24 mb-3" src="https://imgur.com/xNgesuL.png" alt="grinch" />
               <h3 className="text-xl text-gray-900 font-medium mb-1 dark:text-white">#{santa[0].id}</h3>
               <span className="text-sm text-gray-500 dark:text-gray-400">HP = {santa[0].hp}/{santa[0].maxHP}</span> <span className="text-sm text-gray-500 dark:text-gray-400">Attack Damage = {santa[0].attackDamage}</span> <span className="text-sm text-gray-500 dark:text-gray-400">Healing Power = {santa[0].healingPower}</span>
               <div className="flex space-x-3 mt-4 lg:mt-6">

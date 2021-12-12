@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, transformCharacterData } from "../../constants";
-import myEpicGame from "../../utils/MyEpicNFT.json";
+import SantaWars from "../../utils/SantaWars.json";
 import "./Arena.css";
 import LoadingIndicator from "../LoadingIndicator";
 
@@ -90,7 +90,7 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
       const signer = provider.getSigner();
       const gameContract = new ethers.Contract(
         CONTRACT_ADDRESS,
-        myEpicGame.abi,
+        SantaWars.abi,
         signer
       );
 

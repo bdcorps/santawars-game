@@ -3,7 +3,7 @@ import "./App.css";
 import twitterLogo from "./assets/twitter-logo.svg";
 import SelectCharacter from "./Components/SelectCharacter";
 import { CONTRACT_ADDRESS, transformCharacterData } from "./constants";
-import myEpicGame from "./utils/MyEpicNFT.json";
+import SantaWars from "./utils/SantaWars.json";
 import { ethers } from "ethers";
 import Arena from "./Components/Arena";
 import LoadingIndicator from "./Components/LoadingIndicator";
@@ -57,7 +57,7 @@ const App = () => {
       const signer = provider.getSigner();
       const gameContract = new ethers.Contract(
         CONTRACT_ADDRESS,
-        myEpicGame.abi,
+        SantaWars.abi,
         signer
       );
 
@@ -126,7 +126,7 @@ const App = () => {
       const { ethereum } = window;
 
       if (!ethereum) {
-        alert("Get MetaMask!");
+        alert("Download the Metamask extension from the Chrome App Store");
         return;
       }
 

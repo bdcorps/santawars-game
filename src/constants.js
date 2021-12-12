@@ -1,7 +1,8 @@
-const CONTRACT_ADDRESS = "0x358c503790CDbBA1131F2E0754f1567B2b9bB34B";
+const CONTRACT_ADDRESS = "0x9560aA7138e7f39F0bbF5e33e67F67d7a117048f";
 
 const transformCharacterData = (characterData) => {
   return {
+    id: characterData.characterIndex.toNumber(),
     name: characterData.name,
     imageURI: characterData.imageURI,
     hp: characterData.hp.toNumber(),
@@ -11,4 +12,8 @@ const transformCharacterData = (characterData) => {
   };
 };
 
-export { CONTRACT_ADDRESS, transformCharacterData };
+const transformAllPlayers = (players) => {
+  return players.map(e => transformCharacterData(e))
+};
+
+export { CONTRACT_ADDRESS, transformCharacterData, transformAllPlayers };

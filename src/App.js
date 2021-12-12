@@ -6,6 +6,7 @@ import { CONTRACT_ADDRESS, transformCharacterData, transformAllPlayers } from ".
 import SantaWars from "./utils/SantaWars.json";
 import { ethers } from "ethers";
 import SelectCharacter from "./components/SelectCharacter";
+import SignupForm from "./components/SignupForm";
 import Modal from 'react-modal';
 
 const customStyles = {
@@ -372,6 +373,7 @@ const App = () => {
 
 
       </div>
+      <SignupForm />
     </div>
   </div>
 };

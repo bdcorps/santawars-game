@@ -20,5 +20,5 @@ EXPOSE 3008
 
 ENV PORT 3008
 
-# start app
-CMD ["npm", "start"]
+# build app
+CMD ["npm", "run", "build"]

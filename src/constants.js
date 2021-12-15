@@ -9,6 +9,7 @@ const transformCharacterData = (characterData) => {
     maxHp: characterData.maxHp.toNumber(),
     attackDamage: characterData.attackDamage.toNumber(),
     healingPower: characterData.healingPower.toNumber(),
+    wallet: characterData.wallet
   };
 };
 

@@ -8,6 +8,7 @@ import { ethers } from "ethers";
 import SelectCharacter from "./components/SelectCharacter";
 import SignupForm from "./components/SignupForm";
 import Modal from 'react-modal';
+import { toast } from 'react-toastify';
 
 const customStyles = {
   content: {
@@ -29,6 +30,8 @@ const App = () => {
   const [gameContract, setGameContract] = useState(null);
   const [attackState, setAttackState] = useState('');
   const [attackTarget, setAttackTarget] = useState(null);
+  const [healingState, setHealingState] = useState('');
+  const [healingTarget, setHealingTarget] = useState(null);
   const [modalIsOpen, setIsOpen] = React.useState(false);
 
   const checkIfWalletIsConnected = async () => {
@@ -95,20 +98,53 @@ const App = () => {
   };
 
   const runAttackAction = async (targetAddress) => {
+    if (characterNFT.hp === 0) {
+      toast.error("Can't attack. You have 0 HP.");
+      return;
+    }
+
     try {
       if (gameContract) {
         setAttackState('attacking');
-        console.log('Attacking target...', allAddresses[targetAddress]);
+        toast.info("Transaction started: Attacking. It will be completed in ~1 min. Sit tight.");
+
         setAttackTarget(targetAddress);
-        const attackTxn = await gameContract.attack(allAddresses[targetAddress]);
+
+        const attackTxn = await gameContract.attack(targetAddress);
         await attackTxn.wait();
-        console.log('attackTxn:', attackTxn);
+        toast.info("Transaction completed: Attacked!");
         setAttackTarget(null);
         setAttackState('hit');
       }
     } catch (error) {
-      console.error('Error attacking boss:', error);
+      console.error('Error attacking target:', error);
       setAttackState('');
+    }
+  };
+
+
+  const runHealingAction = async () => {
+    if (characterNFT.hp === 0) {
+      toast.error("Can't heal. You have 0 HP.");
+      return;
+    }
+
+    try {
+      if (gameContract) {
+        setHealingState('healing');
+
+        toast.info("Transaction started: Healing. It will be completed in ~1 min. Sit tight.");
+
+        const healingTxn = await gameContract.heal(currentAccount);
+        await healingTxn.wait();
+
+        toast.info("Transaction completed: Healed!");
+        setHealingTarget(null);
+        setHealingState('');
+      }
+    } catch (error) {
+      console.error('Error healing target:', error);
+      setHealingState('');
     }
   };
 
@@ -166,8 +202,12 @@ const App = () => {
     const allAddresses = await gameContract.getAllPlayers();
     setAllAddresses(allAddresses);
 
-    const allPlayers = await Promise.all(allAddresses.map(async e => await gameContract.getNFTOnUser(e)
+    const allPlayers = await Promise.all(allAddresses.map(async e => {
+      const details = await gameContract.getNFTOnUser(e);
+      return { ...details, wallet: e };
+    }
     ))
+
 
 
     setAllPlayers(transformAllPlayers(allPlayers));
@@ -223,6 +263,8 @@ const App = () => {
 
   const curTeam = santaTeam ? santas : grinches
 
+  console.log({ curTeam })
+
   if (!currentAccount) {
     return (
       <div className="connect-wallet-container">
@@ -254,13 +296,26 @@ const App = () => {
       contentLabel="Example Modal"
     >
       <h2 className="text-2xl">Instructions</h2>
-      <div>Santawars is an NFT game where you pick a side - Santa Team or Grinch pack.
-        <ul class="list-disc ml-8">
-          <li>You need the <a className="text-blue-500" href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en">Chrome Metamask Extension</a> to play</li>
-          <li>Connect to the Rinkeby Testnet like detailed <a className="text-blue-500" href="https://gist.github.com/tschubotz/8047d13a2d2ac8b2a9faa3a74970c7ef">here</a></li>
-          <li>Get some fake ether by entering your wallet address <a className="text-blue-500" href="https://faucets.chain.link/rinkeby">here</a></li>
-          <li>Once completed, reload the page and you should see a Connect to Metamask pop up</li>
+      <div>
+        <h1 className="text-lg mb-4">Santawars is an NFT game where you pick a side - Santa Team or Grinch pack</h1>
+
+        <ul class="list-disc ml-8 mb-8">
+          <li>You can attack the other team by pressing the attack button</li>
+          <li>You can heal yourself</li>
+          <li>The team with most standing people on Dec 25th will be the winner</li>
+
         </ul>
+        <div className="video-responsive">
+          <iframe
+            width="853"
+            height="480"
+            src="https://www.youtube.com/embed/Tdld3p4ueI0"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title="Embedded youtube"
+          />
+        </div>
 
       </div>
     </Modal>
@@ -276,10 +331,10 @@ const App = () => {
               <div className="flex flex-col items-center pb-10">
 
                 <img className="h-24 w-24 mb-3" src={characterNFT.imageURI} alt="grinch" />
-                <h3 className="text-xl text-gray-900 font-medium mb-1 dark:text-white">#{characterNFT.id}</h3>
+                <h3 className="text-xl text-gray-900 font-medium mb-1 dark:text-white">#{characterNFT.name}</h3>
                 <span className="text-sm text-gray-500 dark:text-gray-400">HP = {characterNFT.hp}/{characterNFT.maxHp}</span> <span className="text-sm text-gray-500 dark:text-gray-400">Attack Damage = {characterNFT.attackDamage}</span> <span className="text-sm text-gray-500 dark:text-gray-400">Healing Power = {characterNFT.healingPower}</span>
                 <div className="flex space-x-3 mt-4 lg:mt-6">
-                  <button className="text-white bg-green-500 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Heal <svg className="-mr-1 ml-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button >
+                  <button onClick={() => { runHealingAction() }} className="text-white bg-green-500 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Heal <svg className="-mr-1 ml-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button >
 
                 </div>
 
@@ -292,7 +347,7 @@ const App = () => {
           </div>
 
         </div>
-        <div className="w-4/5 h-screen p-4 bg-gray-100">
+        <div className="w-4/5 p-4 bg-gray-100">
 
           <h1 className="text-3xl">Santa Wars</h1>
           <h2 className="text-2xl">{`${santaScore}-${grinchScore} (Santa is winning)`}</h2>
@@ -349,7 +404,7 @@ const App = () => {
                           </td>
 
                           <td className="px-6 py-4 text-left whitespace-nowrap text-sm font-medium">
-                            <button onClick={() => { runAttackAction(i) }} className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                            <button onClick={() => { runAttackAction(e.wallet) }} className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
                               Attack
                               <svg className="-mr-1 ml-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                             </button>

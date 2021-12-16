@@ -268,16 +268,27 @@ const App = () => {
   if (!currentAccount) {
     return (
       <div className="connect-wallet-container">
-        <img
-          src="https://64.media.tumblr.com/tumblr_mbia5vdmRd1r1mkubo1_500.gifv"
-          alt="Monty Python Gif"
-        />
+        <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-red-600 text-center mt-48 mb-10">
+          Santa Wars
+        </h1>
         <button
           className="cta-button connect-wallet-button"
           onClick={connectWalletAction}
         >
           Connect Wallet To Get Started
         </button>
+
+        <div className="w-full mt-10">
+          <iframe
+            width="100%"
+            height="480"
+            src="https://www.youtube.com/embed/Tdld3p4ueI0"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title="Embedded youtube"
+          />
+        </div>
       </div>
     );
   }

@@ -1,6 +1,6 @@
 export const SignupForm = () => {
   return (
-    <section className="footer-cta text-center mb-4 fixed bottom-0">
+    <section className="footer-cta text-center mb-4 ml-4 fixed bottom-0">
       <div className="inner p-4" style={{ backgroundColor: "#4338CA" }}>
         <form
           className="footer-cta-button"
@@ -12,7 +12,6 @@ export const SignupForm = () => {
           </p>
 
           <div className="flex">
-            {" "}
             <input
               className="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-10 mr-4 w-full"
               id="username"

@@ -8,7 +8,7 @@ import LoadingIndicator from "../LoadingIndicator";
 /*
  * We pass in our characterNFT metadata so we can a cool card in our UI
  */
-const Arena = ({ characterNFT, setCharacterNFT }) => {
+const Arena = ({ player1, player2 }) => {
   // State
   const [gameContract, setGameContract] = useState(null);
   /*

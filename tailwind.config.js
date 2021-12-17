@@ -13,7 +13,7 @@ module.exports = {
           '50%': { transform: 'translateX(0.35rem)' },
         }
       }, animation: {
-        wiggle: 'wiggle 0.4s ease-in-out infinite',
+        wiggle: 'wiggle 0.2s ease-in-out infinite',
       }
     },
   },

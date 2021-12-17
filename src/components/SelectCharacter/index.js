@@ -103,7 +103,7 @@ const SelectCharacter = ({ setCharacterNFT }) => {
 
         <h2 className="text-4xl font-medium">Mint your hero</h2>
         <div className="flex flex-wrap w-96 mx-auto">
-          {mintingCharacter ? "Minting in progress" : renderCharacters()}
+          {mintingCharacter ? <div className="text-center mt-4 mx-auto">Minting in progress. Reload the page.</div> : renderCharacters()}
         </div>
       </div>
     </div>

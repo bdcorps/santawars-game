@@ -63,6 +63,8 @@ const App = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [soundURL, setSoundURL] = useState(null);
   const [logs, setLogs] = useState(null);
+  const [input, setInput] = useState(null);
+  const [twitter, setTwitter] = useState(null);
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -90,8 +92,8 @@ const App = () => {
 
         if (accounts.length !== 0) {
           const account = accounts[0];
-          console.log('Found an authorized account:', account);
           setCurrentAccount(account);
+          getUser({ wallet: account })
         } else {
           console.log('No authorized account found');
         }
@@ -123,6 +125,8 @@ const App = () => {
       console.log('Connected', accounts[0]);
 
       setCurrentAccount(accounts[0]);
+      postUser({ walletId: accounts[0], twitter: input });
+
     } catch (error) {
       console.log(error);
     }
@@ -137,7 +141,7 @@ const App = () => {
     }
 
 
-    const enemy = allPlayers.find(e => e.wallet === targetAddress)
+    const enemy = allPlayers.find(e => e.walletId === targetAddress)
 
     if (enemy.hp === 0) {
       toast.error("Can't attack. Target is already dead.");
@@ -192,12 +196,24 @@ const App = () => {
   };
 
   const openModal = () => {
-    console.log("openning")
     setIsOpen(true);
   }
 
   const closeModal = () => {
     setIsOpen(false);
+  }
+
+  const postUser = (message) => {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(message)
+    };
+    fetch('https://santawars-backend.herokuapp.com/user', requestOptions).then(response => {
+      getUser({ wallet: currentAccount })
+    });
+
+
   }
 
   const postLog = (message) => {
@@ -220,9 +236,7 @@ const App = () => {
         return response.json()
       })
       .then(data => {
-        console.log({ response: data })
         setLogs(data);
-        console.log({ logs });
       });
   }, []);
 
@@ -230,6 +244,23 @@ const App = () => {
     checkIfWalletIsConnected();
   }, []);
 
+
+  const getUser = ({ wallet }) => {
+    if (!wallet) { return; }
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    };
+    fetch('https://santawars-backend.herokuapp.com/users', requestOptions)
+      .then(response => {
+        return response.json()
+      })
+      .then(data => {
+        const twitter = data.find(e => e.walletId === wallet)
+        setTwitter(twitter?.twitter);
+        console.log("get user: ", wallet, twitter)
+      });
+  }
 
   useEffect(() => {
     const fetchNFTMetadata = async () => {
@@ -249,7 +280,9 @@ const App = () => {
         console.log('User has character NFT');
         if (txn.name) {
           console.log('User has character NFT');
-          setCharacterNFT(transformCharacterData(txn));
+          const transformedCharacter = transformCharacterData(txn);
+          setCharacterNFT(transformedCharacter);
+          getUser({ wallet: transformedCharacter.wallet })
         } else {
           console.log('No character NFT found');
         }
@@ -330,15 +363,27 @@ const App = () => {
 
   const curTeam = santaTeam ? santas : grinches
 
-  if (!currentAccount) {
+  const handleChange = (e) => {
+    setInput(e.target.value);
+  }
+
+  if (!currentAccount || !!!twitter) {
     return (
-      <div className="connect-wallet-container">
+      <div className="connect-wallet-container text-center">
         <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-red-600 text-center mt-48 mb-10">
           Santa Wars
         </h1>
+
+        <div className="w-1/2 mx-auto mb-10">
+          <label for="twitter" class="block text-xs font-semibold text-gray-600 uppercase">What is your Twitter handle?</label>
+          <input id="twitter" type="text" name="twitter" onChange={handleChange} placeholder="@elonmusk" autocomplete="given-name" class="block rounded-lg w-full p-3 mt-2 text-gray-800 bg-gray-200 appearance-none focus:outline-none focus:bg-gray-200 focus:shadow-inner" required />
+        </div>
+
+
         <button
-          className="cta-button connect-wallet-button"
+          className={`py-2 rounded-lg text-white ${!!!input ? "bg-gray-500 text-black" : "bg-red-700"}`}
           onClick={connectWalletAction}
+          disabled={!!!input}
         >
           Connect your ETH wallet
         </button>
@@ -367,10 +412,9 @@ const App = () => {
   }
 
   return <div>
-
-    <div className="h-18 bg-red-700 text-white text-center">
+    {/* <div className="h-8 bg-red-700 text-white text-center">
       It will be decided on 25th Decemeber. Learn more -
-    </div>
+    </div> */}
     <Modal
       isOpen={modalIsOpen}
       onRequestClose={closeModal}
@@ -513,13 +557,11 @@ const App = () => {
           </div>}
 
         </div>
-        <div className="w-2/5 p-4 bg-gray-100 text-left">
-          <p className="text-lg mb-4 font-medium">Live game logs</p>
-
+        <div className="w-2/5 p-4 bg-gray-200 text-left">
+          {/* <p className="text-lg mb-4 font-medium">Live game logs</p> */}
           {
             logs && logs.map(e => <p>{e.message}</p>)
           }
-
         </div>
 
       </div>

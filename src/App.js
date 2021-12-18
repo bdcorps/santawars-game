@@ -571,9 +571,9 @@ const App = () => {
 
         </div>
         <div className="w-2/5 p-4 bg-gray-200 text-left">
-          {/* <p className="text-lg mb-4 font-medium">Live game logs</p> */}
+          <p className="text-lg mb-4 font-medium">Live game logs</p>
           {
-            logs && logs.map(e => <div><a href={`https://rinkeby.etherscan.io/address/${e.transaction}`}>{e.message}</a></div>)
+            logs && logs.map(e => <div><a className="underline text-blue-700" href={`https://rinkeby.etherscan.io/address/${e.transaction}`}>{e.message}</a></div>)
           }
         </div>
 

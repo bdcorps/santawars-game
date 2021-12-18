@@ -101,7 +101,7 @@ const SelectCharacter = ({ setCharacterNFT }) => {
     ));
 
   return (
-    <div className="bg-gray-200 w-screen h-screen">
+    <div className="bg-gray-200 w-full h-full">
       <div className="pt-12 text-center">
 
         <h2 className="text-4xl font-medium">Mint your hero</h2>

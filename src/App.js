@@ -430,7 +430,7 @@ const App = () => {
 
   return <div>
     <div className="h-8 bg-red-700 text-white text-center">
-      <p>The team with the most survivers on Dec 25th, 2021 will be the winner 🎁</p>
+      <p className="pt-1">The team with the most survivers on Dec 25th, 2021 will be the winner 🎁</p>
 
       {/* 1640455200 */}
     </div>

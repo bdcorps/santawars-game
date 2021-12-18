@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Sound from 'react-sound';
 import "./App.css";
 import '@themesberg/flowbite';
-import twitterLogo from "./assets/twitter-logo.svg";
 import { CONTRACT_ADDRESS, transformCharacterData, transformAllPlayers } from "./constants";
 import SantaWars from "./utils/SantaWars.json";
 import { ethers } from "ethers";
@@ -10,6 +9,7 @@ import SelectCharacter from "./components/SelectCharacter";
 import SignupForm from "./components/SignupForm";
 import Modal from 'react-modal';
 import { toast } from 'react-toastify';
+import DateCountdown from 'react-date-countdown-timer';
 
 
 const customStyles = {
@@ -429,9 +429,11 @@ const App = () => {
   }
 
   return <div>
-    {/* <div className="h-8 bg-red-700 text-white text-center">
-      It will be decided on 25th Decemeber. Learn more -
-    </div> */}
+    <div className="h-8 bg-red-700 text-white text-center">
+      <p>The team with the most survivers on Dec 25th, 2021 will be the winner 🎁</p>
+
+      {/* 1640455200 */}
+    </div>
 
     <Sound
       url={soundURL}
@@ -452,19 +454,7 @@ const App = () => {
           <li>You can attack the other team by pressing the attack button</li>
           <li>You can heal yourself</li>
           <li>The team with most standing people on Dec 25th will be the winner</li>
-
         </ul>
-        <div className="video-responsive">
-          <iframe
-            width="853"
-            height="480"
-            src="https://www.youtube.com/embed/Tdld3p4ueI0"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            title="Embedded youtube"
-          />
-        </div>
 
       </div>
     </Modal>
@@ -484,8 +474,8 @@ const App = () => {
 
                 </div>
 
-                <button className="mt-4 mb-2" onClick={openModal}>Show instructions</button>
-                <a className="underline text-blue-500" href={`https://rinkeby.rarible.com/token/${currentAccount}`}>View on Rarible</a>
+                <button className="mt-4 mb-2" onClick={openModal}>How to play</button>
+                <a className="underline text-blue-500" target="__blank" href={`https://rinkeby.rarible.com/user/${currentAccount}/owned`}>View on Rarible</a>
               </div>
             </div>
 

@@ -10,6 +10,9 @@ const SelectCharacter = ({ setCharacterNFT }) => {
   const [gameContract, setGameContract] = useState(null);
   const [mintingCharacter, setMintingCharacter] = useState(false);
 
+  const aTeam = ["Santa", "Gingerbread Man", "Snowman"]
+  const bTeam = ["Grinch", "Devil", "Rudolph"]
+
   useEffect(() => {
     const getCharacters = async () => {
       try {
@@ -87,10 +90,12 @@ const SelectCharacter = ({ setCharacterNFT }) => {
 
   const renderCharacters = () =>
     characters.map((character, index) => (
-      <div className="w-36 text-center m-4 mt-8" key={character.name}>
+      <div className="w-48 text-center m-4 mt-8" key={character.name}>
         <img src={character.imageURI} className="animate-bounce" alt={character.name} />
 
         <div className="my-4">
+
+          <div className="rounded-lg px-4 py-2">{`TEAM ${aTeam.includes(character.name) ? "SANTA" : "GRINCH"}`}</div>
           <p className="text-gray-500 dark:text-gray-400">HP = {character.hp}/{character.maxHp}</p> <p className="text-gray-500 dark:text-gray-400">Attack Damage = {character.attackDamage}</p> <p className="text-gray-500 dark:text-gray-400">Healing Power = {character.healingPower}</p>
 
         </div>
@@ -101,11 +106,11 @@ const SelectCharacter = ({ setCharacterNFT }) => {
     ));
 
   return (
-    <div className="bg-gray-200 w-full h-full">
+    <div className="bg-gray-200 w-screen h-screen">
       <div className="pt-12 text-center">
 
         <h2 className="text-4xl font-medium">Mint your hero</h2>
-        <div className="flex flex-wrap w-96 mx-auto">
+        <div className="flex flex-wrap mx-auto items-center justify-center mt-12">
           {mintingCharacter ? <div className="text-center mt-4 mx-auto">Minting in progress. Reload the page after the transaction is confirmed.</div> : renderCharacters()}
         </div>
       </div>

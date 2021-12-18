@@ -65,6 +65,7 @@ const App = () => {
   const [logs, setLogs] = useState(null);
   const [input, setInput] = useState(null);
   const [twitter, setTwitter] = useState(null);
+  const [allTwitters, setAllTwitters] = useState(null);
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -133,7 +134,6 @@ const App = () => {
   };
 
   const runAttackAction = async (targetAddress) => {
-    postLog({ message: "sssaini is attacking sssaini" });
     if (characterNFT.hp === 0) {
       toast.error("Can't attack. You have 0 HP.");
       setSoundURL("/fail.wav")
@@ -141,7 +141,7 @@ const App = () => {
     }
 
 
-    const enemy = allPlayers.find(e => e.walletId === targetAddress)
+    const enemy = allPlayers.find(e => e.wallet === targetAddress)
 
     if (enemy.hp === 0) {
       toast.error("Can't attack. Target is already dead.");
@@ -160,7 +160,14 @@ const App = () => {
         await attackTxn.wait();
         toast.success("Transaction completed: Attacked!");
         setAttackTarget(null);
-        setSoundURL("/hit.wav")
+        setSoundURL("/hit.wav");
+
+        const pTwitter = allTwitters.find(e => e.walletId === targetAddress)?.twitter || "Player";
+        const eTwitter = allTwitters.find(e => e.walletId === enemy.wallet)?.twitter || "Enemy";
+
+        postLog({ message: `${pTwitter} just attacked ${eTwitter} for ${characterNFT.attackDamage} points`, transaction: attackTxn })
+
+
       }
     } catch (error) {
       console.error('Error attacking target:', error);
@@ -188,6 +195,11 @@ const App = () => {
         toast.success("Transaction completed: Healed!");
         setHealingTarget(null);
         setHealingState('');
+
+
+        const pTwitter = allTwitters.find(e => e.walletId === characterNFT.wallet).twitter || "Player";
+
+        postLog({ message: `${pTwitter} just healed for ${characterNFT.healingPower} points`, transaction: healingTxn })
       }
     } catch (error) {
       console.error('Error healing target:', error);
@@ -223,10 +235,11 @@ const App = () => {
       body: JSON.stringify(message)
     };
     fetch('https://santawars-backend.herokuapp.com/log', requestOptions);
-
+    getLogs();
   }
 
-  useEffect(() => {
+
+  const getLogs = () => {
     const requestOptions = {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
@@ -238,12 +251,15 @@ const App = () => {
       .then(data => {
         setLogs(data);
       });
+  }
+
+  useEffect(() => {
+    getLogs()
   }, []);
 
   useEffect(() => {
     checkIfWalletIsConnected();
   }, []);
-
 
   const getUser = ({ wallet }) => {
     if (!wallet) { return; }
@@ -256,6 +272,7 @@ const App = () => {
         return response.json()
       })
       .then(data => {
+        setAllTwitters(data)
         const twitter = data.find(e => e.walletId === wallet)
         setTwitter(twitter?.twitter);
         console.log("get user: ", wallet, twitter)
@@ -369,7 +386,7 @@ const App = () => {
 
   if (!currentAccount || !!!twitter) {
     return (
-      <div className="connect-wallet-container text-center">
+      <div className="connect-wallet-container text-center pb-8">
         <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-red-600 text-center mt-48 mb-10">
           Santa Wars
         </h1>
@@ -415,6 +432,12 @@ const App = () => {
     {/* <div className="h-8 bg-red-700 text-white text-center">
       It will be decided on 25th Decemeber. Learn more -
     </div> */}
+
+    <Sound
+      url={soundURL}
+      playStatus={Sound.status.PLAYING}
+    />
+
     <Modal
       isOpen={modalIsOpen}
       onRequestClose={closeModal}
@@ -422,7 +445,7 @@ const App = () => {
       contentLabel="Example Modal"
     >
       <h2 className="text-2xl">Instructions</h2>
-      <div>
+      <div className="mb-8">
         <h1 className="text-lg mb-4">Santawars is an NFT game where you pick a side - Santa Team or Grinch pack</h1>
 
         <ul className="list-disc ml-8 mb-8">
@@ -445,16 +468,6 @@ const App = () => {
 
       </div>
     </Modal>
-
-
-
-    <Sound
-      url={soundURL}
-      playStatus={Sound.status.PLAYING}
-
-    />
-
-
 
     <div className="text-center">
 
@@ -560,14 +573,14 @@ const App = () => {
         <div className="w-2/5 p-4 bg-gray-200 text-left">
           {/* <p className="text-lg mb-4 font-medium">Live game logs</p> */}
           {
-            logs && logs.map(e => <p>{e.message}</p>)
+            logs && logs.map(e => <div><a href={`https://rinkeby.etherscan.io/address/${e.transaction}`}>{e.message}</a></div>)
           }
         </div>
 
       </div>
       <SignupForm />
     </div>
-  </div>
+  </div >
 };
 
 export default App;

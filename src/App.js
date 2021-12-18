@@ -484,7 +484,8 @@ const App = () => {
 
                 </div>
 
-                <button className="mt-4" onClick={openModal}>Show instructions</button>
+                <button className="mt-4 mb-2" onClick={openModal}>Show instructions</button>
+                <a className="underline text-blue-500" href={`https://rinkeby.rarible.com/token/${currentAccount}`}>View on Rarible</a>
               </div>
             </div>
 

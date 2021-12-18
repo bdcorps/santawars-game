@@ -95,7 +95,7 @@ const SelectCharacter = ({ setCharacterNFT }) => {
 
         <div className="my-4">
 
-          <div className="rounded-lg px-4 py-2">{`TEAM ${aTeam.includes(character.name) ? "SANTA" : "GRINCH"}`}</div>
+          <div className="rounded-lg px-2 py-1 text-sm font-medium text-red-600 mb-4">{`TEAM ${aTeam.includes(character.name) ? "SANTA" : "GRINCH"}`}</div>
           <p className="text-gray-500 dark:text-gray-400">HP = {character.hp}/{character.maxHp}</p> <p className="text-gray-500 dark:text-gray-400">Attack Damage = {character.attackDamage}</p> <p className="text-gray-500 dark:text-gray-400">Healing Power = {character.healingPower}</p>
 
         </div>

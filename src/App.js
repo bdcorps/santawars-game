@@ -9,8 +9,6 @@ import SelectCharacter from "./components/SelectCharacter";
 import SignupForm from "./components/SignupForm";
 import Modal from 'react-modal';
 import { toast } from 'react-toastify';
-import DateCountdown from 'react-date-countdown-timer';
-
 
 const customStyles = {
   content: {

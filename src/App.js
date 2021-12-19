@@ -230,7 +230,7 @@ const App = () => {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(message)
+      body: message
     };
     fetch('https://santawars-backend.herokuapp.com/log', requestOptions);
     getLogs();

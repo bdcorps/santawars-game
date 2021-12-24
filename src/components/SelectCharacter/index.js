@@ -10,8 +10,8 @@ const SelectCharacter = ({ setCharacterNFT }) => {
   const [gameContract, setGameContract] = useState(null);
   const [mintingCharacter, setMintingCharacter] = useState(false);
 
-  const aTeam = ["Santa", "Gingerbread Man", "Snowman"]
-  const bTeam = ["Grinch", "Devil", "Rudolph"]
+  const aTeam = ["Santa", "Gingerbread Man", "Snowman"];
+  const bTeam = ["Grinch", "Devil", "Rudolph"];
 
   useEffect(() => {
     const getCharacters = async () => {
@@ -91,35 +91,69 @@ const SelectCharacter = ({ setCharacterNFT }) => {
   const renderCharacters = () =>
     characters.map((character, index) => (
       <div className="w-48 text-center m-4 mt-8" key={character.name}>
-        <img src={character.imageURI} className="animate-bounce" alt={character.name} />
+        <img
+          src={character.imageURI}
+          className="animate-bounce"
+          alt={character.name}
+        />
 
         <div className="my-4">
-
-          <div className="rounded-lg px-2 py-1 text-sm font-medium text-red-600 mb-4">{`TEAM ${aTeam.includes(character.name) ? "SANTA" : "GRINCH"}`}</div>
-          <p className="text-gray-500 dark:text-gray-400">HP = {character.hp}/{character.maxHp}</p> <p className="text-gray-500 dark:text-gray-400">Attack Damage = {character.attackDamage}</p> <p className="text-gray-500 dark:text-gray-400">Healing Power = {character.healingPower}</p>
-
+          <div className="rounded-lg px-2 py-1 text-sm font-medium text-red-600 mb-4">{`TEAM ${
+            aTeam.includes(character.name) ? "SANTA" : "GRINCH"
+          }`}</div>
+          <p className="text-gray-500 dark:text-gray-400">
+            HP = {character.hp}/{character.maxHp}
+          </p>{" "}
+          <p className="text-gray-500 dark:text-gray-400">
+            Attack Damage = {character.attackDamage}
+          </p>{" "}
+          <p className="text-gray-500 dark:text-gray-400">
+            Healing Power = {character.healingPower}
+          </p>
         </div>
 
         <button
-          onClick={mintCharacterNFTAction(index)} className="mx-auto text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ">{`Mint ${character.name}`} <svg className="-mr-1 ml-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></button >
+          onClick={mintCharacterNFTAction(index)}
+          className="mx-auto text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
+        >
+          {`Mint ${character.name}`}{" "}
+          <svg
+            className="-mr-1 ml-2 h-4 w-4"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </button>
       </div>
     ));
 
   return (
     <div className="bg-gray-200 w-screen h-screen">
       <div className="pt-12 text-center">
-
         <h2 className="text-4xl font-medium">Mint your hero</h2>
         <div className="flex flex-wrap mx-auto items-center justify-center mt-12">
-          {mintingCharacter ? <div className="text-center mt-4 mx-auto">Minting in progress. Reload the page after the transaction is confirmed.</div> : renderCharacters()}
+          {mintingCharacter ? (
+            <div className="text-center mt-4 mx-auto">
+              Minting in progress. Reload the page after the transaction is
+              confirmed.
+            </div>
+          ) : (
+            renderCharacters()
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-
-{/* <div className="select-character-container">
+{
+  /* <div className="select-character-container">
 <h2>Mint Your Hero. Choose wisely.</h2>
 {characters.length > 0 && (
   <div className="character-grid">{renderCharacters()}</div>
@@ -132,6 +166,7 @@ const SelectCharacter = ({ setCharacterNFT }) => {
     </div>
   </div>
 )}
-</div> */}
+</div> */
+}
 
 export default SelectCharacter;

@@ -9,12 +9,12 @@ const transformCharacterData = (characterData) => {
     maxHp: characterData.maxHp.toNumber(),
     attackDamage: characterData.attackDamage.toNumber(),
     healingPower: characterData.healingPower.toNumber(),
-    wallet: characterData.wallet
+    wallet: characterData.wallet,
   };
 };
 
 const transformAllPlayers = (players) => {
-  return players.map(e => transformCharacterData(e))
+  return players.map((e) => transformCharacterData(e));
 };
 
 export { CONTRACT_ADDRESS, transformCharacterData, transformAllPlayers };
